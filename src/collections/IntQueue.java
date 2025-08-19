@@ -490,7 +490,7 @@ public class IntQueue extends IntArray {
             lastIndex = capacity - 1;
         }
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = 0;
             lastIndex = 0;
         }
@@ -511,7 +511,7 @@ public class IntQueue extends IntArray {
         collection[firstIndex] = 0;
         size--;
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
         } else {
             firstIndex++;
@@ -537,7 +537,7 @@ public class IntQueue extends IntArray {
         collection[firstIndex] = 0;
         size--;
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
         } else {
             firstIndex++;
