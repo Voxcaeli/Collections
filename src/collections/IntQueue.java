@@ -1,5 +1,7 @@
 package collections;
 
+import com.sun.tools.jconsole.JConsoleContext;
+
 import java.util.NoSuchElementException;
 
 public class IntQueue extends IntArray {
@@ -8,7 +10,6 @@ public class IntQueue extends IntArray {
      * Индекс первого элемента очереди
      * */
     protected int firstIndex;
-
     /**
      * Индекс последнего элемента очереди
      * */
@@ -45,7 +46,6 @@ public class IntQueue extends IntArray {
         firstIndex = 0;
         lastIndex = size - 1;
     }
-
     /**
      * Конструктор очереди с указанием её вместимости и списком добавляемых значений
      * @param capacity Вместимость будущей очереди
@@ -105,29 +105,6 @@ public class IntQueue extends IntArray {
             return null;
         }
         return collection[firstIndex];
-    }
-
-    /**
-     * Получение элемента из конца очереди
-     * @return Элемент конца очереди
-     * @exception NoSuchElementException Ошибка получения элемента из пустой очереди
-     * **/
-    public int getLast() {
-        if (size == 0) {
-            throw new NoSuchElementException("В очереди отсутствуют элементы");
-        }
-        return collection[lastIndex];
-    }
-
-    /**
-     * Получение элемента из конца очереди
-     * @return Элемент конца очереди типа {@link Integer}
-     * **/
-    public Integer peekLast() {
-        if (size == 0) {
-            return null;
-        }
-        return collection[lastIndex];
     }
 
     /**
@@ -208,16 +185,18 @@ public class IntQueue extends IntArray {
         int[] newCollection = new int[size];
 
         if (firstIndex <= lastIndex) {
-            for (int i = firstIndex; i <= lastIndex; i++) {
-                newCollection[i] = collection[i];
+            for (int i = 0, j = firstIndex; j <= lastIndex; i++, j++) {
+                newCollection[i] = collection[j];
             }
         } else {
-            for (int i = firstIndex; i < capacity; i++) {
-                newCollection[i] = collection[i];
+            int i = 0;
+
+            for (int j = firstIndex; j < capacity; i++, j++) {
+                newCollection[i] = collection[j];
             }
 
-            for (int i = 0; i <= lastIndex; i++) {
-                newCollection[i] = collection[i];
+            for (int j = 0; j <= lastIndex; j++) {
+                newCollection[i] = collection[j];
             }
         }
         return newCollection;
@@ -325,7 +304,7 @@ public class IntQueue extends IntArray {
             throw new ArrayStoreException("Очередь заполнена. Добавление нового элемента невозможно");
         }
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
         } else {
             lastIndex++;
@@ -334,7 +313,6 @@ public class IntQueue extends IntArray {
         if (lastIndex == capacity) {
             lastIndex = 0;
         }
-
         collection[lastIndex] = value;
         size++;
     }
@@ -360,7 +338,7 @@ public class IntQueue extends IntArray {
             return false;
         }
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
         } else {
             lastIndex++;
@@ -410,6 +388,7 @@ public class IntQueue extends IntArray {
      * @return Удалённый элемент двусторонней очереди
      * @exception NoSuchElementException Ошибка удаления элемента пустой двусторонней очереди
      * */
+    @Override
     public int remove(int index) {
         if (size == 0) {
             throw new NoSuchElementException("В двусторонней очереди отсутствуют элементы");
@@ -426,6 +405,8 @@ public class IntQueue extends IntArray {
                 collection[i] = collection[i + 1];
             }
         } else if (index < capacity) {
+            value = collection[index];
+
             for (int i = index; i < capacity - 1; i++) {
                 collection[i] = collection[i + 1];
             }
@@ -446,12 +427,11 @@ public class IntQueue extends IntArray {
 
         collection[lastIndex] = 0;
         lastIndex--;
+        size--;
 
         if (lastIndex == -1) {
             lastIndex = capacity - 1;
         }
-
-        size--;
 
         if (size == 0) {
             firstIndex = 0;
@@ -466,6 +446,7 @@ public class IntQueue extends IntArray {
      *              (положительный - с начала двусторонней очереди, отрицательный - с конца двусторонней очереди)
      * @return Удалённый элемент двусторонней очереди типа {@link Integer}
      * */
+    @Override
     public Integer poll(int index) {
         if (size == 0) {
             throw new NoSuchElementException("В двусторонней очереди отсутствуют элементы");
@@ -482,10 +463,11 @@ public class IntQueue extends IntArray {
                 collection[i] = collection[i + 1];
             }
         } else if (index < capacity) {
+            value = collection[index];
+
             for (int i = index; i < capacity - 1; i++) {
                 collection[i] = collection[i + 1];
             }
-
             collection[capacity - 1] = collection[0];
 
             for (int i = 0; i <lastIndex; i++) {
@@ -502,12 +484,11 @@ public class IntQueue extends IntArray {
 
         collection[lastIndex] = 0;
         lastIndex--;
+        size--;
 
         if (lastIndex == -1) {
             lastIndex = capacity - 1;
         }
-
-        size--;
 
         if (size == 0) {
             firstIndex = 0;
@@ -581,22 +562,26 @@ public class IntQueue extends IntArray {
         }
 
         StringBuilder result = new StringBuilder();
-        result.append(collection[0]);
+        result.append(collection[firstIndex]);
+        int index = firstIndex + 1;
 
         if (firstIndex <= lastIndex) {
-            for (int i = 1; i < size; i++) {
-                result.append(" ").append(collection[i]);
+            while (index <= lastIndex) {
+                result.append(" ").append(collection[index]);
+                index++;
             }
         } else {
-            for (int i = 1; i < capacity - 1; i++) {
-                result.append(" ").append(collection[i]);
+            while (index < capacity) {
+                result.append(" ").append(collection[index]);
+                index++;
             }
+            index = 0;
 
-            for (int i = 0; i <= lastIndex; i++) {
-                result.append(" ").append(collection[i]);
+            while (index <= lastIndex) {
+                result.append(" ").append(collection[index]);
+                index++;
             }
         }
-
         return result.toString();
     }
 
@@ -605,24 +590,61 @@ public class IntQueue extends IntArray {
      * @return Строка, состоящая из элементов очереди, включая их индексы
      * */
     public String deepToString() {
-        if (size == 0) {
-            return "";
-        }
+        // ANSI escape codes
+        final String RESET = "\u001B[0m";
+        final String BLACK = "\u001b[30m";
+        final String BG_WHITE = "\u001b[47m";
+
+        int spaceSize = capacity - size;
 
         StringBuilder result = new StringBuilder();
-        result.append("[0]=").append(collection[firstIndex]);
 
         if (firstIndex <= lastIndex) {
-            for (int i = 1; i < size; i++) {
-                result.append("; [").append(i).append("]=").append(collection[i]);
-            }
-        } else {
-            for (int i = 1; i < capacity - 1; i++) {
-                result.append("; [").append(i).append("]=").append(collection[i]);
+            int index = 0;
+            int queueIndex = 0;
+
+            while (index < firstIndex) {
+                result.append("[-]=0 ");
+                index++;
             }
 
-            for (int i = 0; i <= lastIndex; i++) {
-                result.append("; [").append(i).append("]=").append(collection[i]);
+            while (index <= lastIndex) {
+                result.append(BLACK + BG_WHITE);
+                result.append("[").append(queueIndex).append("]=").append(collection[index]).append(" ");
+                result.append(RESET);
+                index++;
+                queueIndex++;
+            }
+
+            while (index < capacity) {
+                result.append("[-]=0 ");
+                index++;
+            }
+        } else {
+            int index = 0;
+            int queueIndex = size - (lastIndex + 1);
+
+            while (index <= lastIndex) {
+                result.append(BLACK + BG_WHITE);
+                result.append("[").append(queueIndex).append("]=").append(collection[index]).append(" ");
+                result.append(RESET);
+                index++;
+                queueIndex++;
+            }
+
+            while (index < firstIndex) {
+                result.append("[-]=0 ");
+                index++;
+            }
+
+            queueIndex = 0;
+
+            while (index < capacity) {
+                result.append(BLACK + BG_WHITE);
+                result.append("[").append(queueIndex).append("]=").append(collection[index]).append(" ");
+                result.append(RESET);
+                index++;
+                queueIndex++;
             }
         }
         return result.toString();
