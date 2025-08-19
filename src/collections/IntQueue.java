@@ -528,15 +528,16 @@ public class IntQueue extends IntArray {
         int value = collection[firstIndex];
 
         collection[firstIndex] = 0;
-        firstIndex++;
         size--;
-
-        if (firstIndex == capacity) {
-            firstIndex = 0;
-        }
 
         if (size == 0) {
             firstIndex = lastIndex = 0;
+        } else {
+            firstIndex++;
+
+            if (firstIndex == capacity) {
+                firstIndex = 0;
+            }
         }
         return value;
     }
@@ -553,15 +554,16 @@ public class IntQueue extends IntArray {
         int value = collection[firstIndex];
 
         collection[firstIndex] = 0;
-        firstIndex++;
         size--;
-
-        if (firstIndex == capacity) {
-            firstIndex = 0;
-        }
 
         if (size == 0) {
             firstIndex = lastIndex = 0;
+        } else {
+            firstIndex++;
+
+            if (firstIndex == capacity) {
+                firstIndex = 0;
+            }
         }
         return value;
     }
