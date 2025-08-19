@@ -18,7 +18,6 @@ public class IntStack extends IntArray {
         super();
         lastIndex = -1;
     }
-
     /**
      * Конструктор стека с указанием его вместимости
      * @param capacity Вместимость будущего стека
@@ -27,7 +26,6 @@ public class IntStack extends IntArray {
         super(capacity);
         lastIndex = -1;
     }
-
     /**
      * Конструктор стека с указанием списка добавляемых значений
      * @param values Список добавляемых значений
@@ -36,7 +34,6 @@ public class IntStack extends IntArray {
         super(values);
         lastIndex = size - 1;
     }
-
     /**
      * Конструктор стека с указанием его вместимости и списком добавляемых значений
      * @param capacity Вместимость будущего стека
