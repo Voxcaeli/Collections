@@ -18,7 +18,6 @@ public class IntDeque extends IntStack {
         super();
         firstIndex = -1;
     }
-
     /**
      * Конструктор двусторонней очереди с указанием её вместимости
      * @param capacity Вместимость будущей двусторонней очереди
@@ -28,7 +27,6 @@ public class IntDeque extends IntStack {
         super(capacity);
         firstIndex = -1;
     }
-
     /**
      * Конструктор двусторонней очереди с указанием списка добавляемых значений
      * @param values Список добавляемых значений
@@ -37,7 +35,6 @@ public class IntDeque extends IntStack {
         super(values);
         firstIndex = 0;
     }
-
     /**
      * Конструктор двусторонней очереди с указанием её вместимости и списком добавляемых значений
      * @param capacity Вместимость будущей двусторонней очереди
@@ -177,16 +174,18 @@ public class IntDeque extends IntStack {
         int[] newCollection = new int[size];
 
         if (firstIndex <= lastIndex) {
-            for (int i = firstIndex; i <= lastIndex; i++) {
-                newCollection[i] = collection[i];
+            for (int i = 0, j = firstIndex; j <= lastIndex; i++, j++) {
+                newCollection[i] = collection[j];
             }
         } else {
-            for (int i = firstIndex; i < capacity; i++) {
-                newCollection[i] = collection[i];
+            int i = 0;
+
+            for (int j = firstIndex; j < capacity; i++, j++) {
+                newCollection[i] = collection[j];
             }
 
-            for (int i = 0; i <= lastIndex; i++) {
-                newCollection[i] = collection[i];
+            for (int j = 0; j <= lastIndex; i++, j++) {
+                newCollection[i] = collection[j];
             }
         }
         return newCollection;
@@ -284,7 +283,7 @@ public class IntDeque extends IntStack {
             throw new ArrayStoreException("Двусторонняя очередь заполнена. Добавление нового элемента невозможно");
         }
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
         } else {
             firstIndex--;
@@ -307,7 +306,7 @@ public class IntDeque extends IntStack {
             return false;
         }
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
         } else {
             firstIndex--;
@@ -343,7 +342,7 @@ public class IntDeque extends IntStack {
             throw new ArrayStoreException("Двусторонняя очередь заполнена. Добавление нового элемента невозможно");
         }
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
         } else {
             lastIndex++;
@@ -379,7 +378,7 @@ public class IntDeque extends IntStack {
             return false;
         }
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
         } else {
             lastIndex++;
@@ -514,7 +513,7 @@ public class IntDeque extends IntStack {
             lastIndex = capacity - 1;
         }
 
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = 0;
             lastIndex = 0;
         }
@@ -533,15 +532,16 @@ public class IntDeque extends IntStack {
         int value = collection[firstIndex];
 
         collection[firstIndex] = 0;
-        firstIndex++;
         size--;
 
-        if (firstIndex == capacity) {
-            firstIndex = 0;
-        }
-
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
+        } else {
+            firstIndex++;
+
+            if (firstIndex == capacity) {
+                firstIndex = 0;
+            }
         }
         return value;
     }
@@ -557,15 +557,16 @@ public class IntDeque extends IntStack {
         int value = collection[firstIndex];
 
         collection[firstIndex] = 0;
-        firstIndex++;
         size--;
 
-        if (firstIndex == capacity) {
-            firstIndex = 0;
-        }
-
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
+        } else {
+            firstIndex++;
+
+            if (firstIndex == capacity) {
+                firstIndex = 0;
+            }
         }
         return value;
     }
@@ -583,15 +584,16 @@ public class IntDeque extends IntStack {
         int value = collection[lastIndex];
 
         collection[lastIndex] = 0;
-        lastIndex--;
         size--;
 
-        if (lastIndex == -1) {
-            lastIndex = capacity - 1;
-        }
-
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
+        } else {
+            lastIndex--;
+
+            if (lastIndex == -1) {
+                lastIndex = capacity - 1;
+            }
         }
         return value;
     }
@@ -608,15 +610,16 @@ public class IntDeque extends IntStack {
         int value = collection[lastIndex];
 
         collection[lastIndex] = 0;
-        lastIndex--;
         size--;
 
-        if (lastIndex == -1) {
-            lastIndex = 0;
-        }
-
-        if (size == 0) {
+        if (size == 1) {
             firstIndex = lastIndex = 0;
+        } else {
+            lastIndex--;
+
+            if (lastIndex == -1) {
+                lastIndex = capacity - 1;
+            }
         }
         return value;
     }
@@ -633,22 +636,26 @@ public class IntDeque extends IntStack {
         }
 
         StringBuilder result = new StringBuilder();
-        result.append(collection[0]);
+        result.append(collection[firstIndex]);
+        int index = firstIndex + 1;
 
         if (firstIndex <= lastIndex) {
-            for (int i = 1; i < size; i++) {
-                result.append(" ").append(collection[i]);
+            while (index <= lastIndex) {
+                result.append(" ").append(collection[index]);
+                index++;
             }
         } else {
-            for (int i = 1; i < capacity - 1; i++) {
-                result.append(" ").append(collection[i]);
+            while (index < capacity) {
+                result.append(" ").append(collection[index]);
+                index++;
             }
+            index = 0;
 
-            for (int i = 0; i <= lastIndex; i++) {
-                result.append(" ").append(collection[i]);
+            while (index <= lastIndex) {
+                result.append(" ").append(collection[index]);
+                index++;
             }
         }
-
         return result.toString();
     }
 
@@ -658,24 +665,59 @@ public class IntDeque extends IntStack {
      * */
     @Override
     public String deepToString() {
-        if (size == 0) {
-            return "";
-        }
+        // ANSI escape codes
+        final String RESET = "\u001B[0m";
+        final String BLACK = "\u001b[30m";
+        final String BG_WHITE = "\u001b[47m";
 
         StringBuilder result = new StringBuilder();
-        result.append("[0]=").append(collection[firstIndex]);
 
         if (firstIndex <= lastIndex) {
-            for (int i = 1; i < size; i++) {
-                result.append("; [").append(i).append("]=").append(collection[i]);
-            }
-        } else {
-            for (int i = 1; i < capacity - 1; i++) {
-                result.append("; [").append(i).append("]=").append(collection[i]);
+            int index = 0;
+            int queueIndex = 0;
+
+            while (index < firstIndex) {
+                result.append("[-]=0 ");
+                index++;
             }
 
-            for (int i = 0; i <= lastIndex; i++) {
-                result.append("; [").append(i).append("]=").append(collection[i]);
+            while (index <= lastIndex) {
+                result.append(BLACK + BG_WHITE);
+                result.append("[").append(queueIndex).append("]=").append(collection[index]).append(" ");
+                result.append(RESET);
+                index++;
+                queueIndex++;
+            }
+
+            while (index < capacity) {
+                result.append("[-]=0 ");
+                index++;
+            }
+        } else {
+            int index = 0;
+            int queueIndex = size - (lastIndex + 1);
+
+            while (index <= lastIndex) {
+                result.append(BLACK + BG_WHITE);
+                result.append("[").append(queueIndex).append("]=").append(collection[index]).append(" ");
+                result.append(RESET);
+                index++;
+                queueIndex++;
+            }
+
+            while (index < firstIndex) {
+                result.append("[-]=0 ");
+                index++;
+            }
+
+            queueIndex = 0;
+
+            while (index < capacity) {
+                result.append(BLACK + BG_WHITE);
+                result.append("[").append(queueIndex).append("]=").append(collection[index]).append(" ");
+                result.append(RESET);
+                index++;
+                queueIndex++;
             }
         }
         return result.toString();
