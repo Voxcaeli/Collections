@@ -195,7 +195,7 @@ public class IntQueue extends IntArray {
                 newCollection[i] = collection[j];
             }
 
-            for (int j = 0; j <= lastIndex; j++) {
+            for (int j = 0; j <= lastIndex; i++, j++) {
                 newCollection[i] = collection[j];
             }
         }
